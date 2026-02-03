@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Valentine</title>
+ 
+<style>
+:root {
+  --pink: #ff7eb9;
+  --pink-dark: #ff4f9a;
+  --bg1: #ffd1dc;
+  --bg2: #ffe6f0;
+}
+ 
+* {
+  box-sizing: border-box;
+  font-family: "Comic Sans MS", "Segoe UI", sans-serif;
+}
+ 
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--bg1), var(--bg2));
+}
+ 
+.card {
+  background: white;
+  padding: 2rem 1.8rem;
+  border-radius: 20px;
+  width: 92%;
+  max-width: 400px;
+  margin: 2rem auto;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  animation: popIn 0.6s ease;
+}
+ 
+@keyframes popIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+ 
+h1 {
+  font-size: 1.5rem;
+  color: var(--pink-dark);
+  margin-bottom: 1.4rem;
+}
+ 
+p {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin: 1.1rem 0;
+}
+ 
+.buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+ 
+button {
+  flex: 1;
+  padding: 0.9rem 0;
+  border-radius: 999px;
+  border: none;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+ 
+/* YES button — gold + RGB glow */
+.yes {
+  background: linear-gradient(135deg, #ffd36a, #ffb700, #ff8c00);
+  color: #4a2b00;
+  box-shadow:
+    0 0 12px rgba(255, 200, 50, 0.7),
+    0 0 22px rgba(255, 120, 0, 0.5),
+    0 0 32px rgba(255, 0, 120, 0.4);
+  animation: rgbGlow 2.5s linear infinite;
+}
+ 
+@keyframes rgbGlow {
+  0%   { box-shadow: 0 0 14px #ffcc00; }
+  33%  { box-shadow: 0 0 22px #ff0066; }
+  66%  { box-shadow: 0 0 22px #00ffff; }
+  100% { box-shadow: 0 0 14px #ffcc00; }
+}
+ 
+.no {
+  background: #eee;
+  color: #666;
+  transition: transform 0.2s ease;
+}
+ 
+/* Popup */
+.popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+ 
+.popup.active {
+  display: flex;
+}
+ 
+.popup-box {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 18px;
+  text-align: center;
+  width: 85%;
+  max-width: 300px;
+}
+ 
+.popup-box button {
+  background: var(--pink);
+  color: white;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.8rem;
+  border-radius: 999px;
+  border: none;
+}
+</style>
+</head>
+ 
+<body>
+ 
+<div class="card">
+  <h1>
+    Joooovanaaaaa, Don't you ever get a bit sad when you think hard about life and you remember the fact you don't love me as much as I love you?... I know it's true.. but even then..
+  </h1>
+ 
+  <p>
+    like… not in a dramatic way.
+    Just in that quiet way, when it’s late, and your brain decides that now
+    is the perfect time to replay every thought you’ve ever had..
+  </p>
+ 
+  <p>
+    When you’re lying there, staring at the ceiling, and you randomly remember
+    how someone out there loves you way more than you love them...
+  </p>
+ 
+  <p>
+    And you start thinking about how weird that is.
+    How unfair maybe.
+    Or how you don’t really deserve such a man...
+  </p>
+ 
+  <p>
+    Loving you lsooo much...
+    Even when you know you'll never love him that much...
+  </p>
+ 
+  <p>
+    And it's true.
+    I know that.
+    I’ve known that.
+  </p>
+ 
+  <p>
+    But sometimes I wonder if, deep down, that thought still sits with you.
+    Just a little.
+    Like background noise...
+  </p>
+ 
+  <p>
+    Anyway… yeah.
+    Just something to think about.
+    But anywayyyy...
+  </p>
+ 
+  <h1>Will you be my Valentine? 💖</h1>
+ 
+  <div class="buttons">
+    <button class="yes" id="yesBtn">Yes!!!! </button>
+    <button class="no" id="noBtn">No..🤔</button>
+  </div>
+</div>
+ 
+<div class="popup" id="popup">
+  <div class="popup-box">
+    <p id="popupText"></p>
+    <button id="closePopup">OK</button>
+  </div>
+</div>
+ 
+<script>
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const popup = document.getElementById("popup");
+const popupText = document.getElementById("popupText");
+const closePopup = document.getElementById("closePopup");
+ 
+let noClickCount = 0;
+let isThinking = false;
+ 
+const noMessages = [
+  "Wrong choice ",
+  "Think again",
+  "You sure about that?",
+  "Try again",
+  "That button is lying",
+  "We both know that’s not true",
+  "You pressed the wrong one",
+  "You meant yes",
+  "Error 404: No not found",
+  "BLaBlaBla Try again",
+  "Mimi why are you doing this :(",
+  "So mean for no reason, try again negro",
+];
+ 
+function showPopup(text) {
+  popupText.textContent = text;
+  popup.classList.add("active");
+}
+ 
+closePopup.onclick = () => popup.classList.remove("active");
+ 
+/* YES: best-effort iOS haptic + WhatsApp deep link */
+yesBtn.onclick = () => {
+  if (navigator.vibrate) navigator.vibrate(50);
+ 
+  const message = encodeURIComponent("It's a yes daddy");
+  const url = "https://wa.me/351929177740?text=" + message;
+ 
+  window.location.href = url;
+};
+ 
+/* NO: fake thinking delay + movement */
+noBtn.onclick = () => {
+  if (isThinking) return;
+ 
+  noClickCount++;
+  isThinking = true;
+ 
+  popupText.textContent = "Thinking please wait...";
+  popup.classList.add("active");
+ 
+  if (noClickCount >= 2) {
+    const x = Math.random() * 400 - 70;
+    const y = Math.random() * 500 - 50;
+    noBtn.style.transform = `translate(${x}px, ${y}px)`;
+  }
+ 
+  setTimeout(() => {
+    popup.classList.remove("active");
+    showPopup(noMessages[Math.floor(Math.random() * noMessages.length)]);
+    isThinking = false;
+  }, 0);
+};
+</script>
+ 
+</body>
+</html>
